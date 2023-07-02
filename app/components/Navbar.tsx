@@ -105,7 +105,7 @@ export default function Navbar() {
                 router.push('/searched');
                 setOpen(false);
                 setLoading(false)
-              }, 4000); 
+              }, 5000); 
 
               
                
@@ -146,7 +146,7 @@ export default function Navbar() {
                                     {width: 1000}
                                 }
                                
-                                placeholder='Search for your favorite artist or album...'
+                                placeholder='Search for your favorite artist...'
                                 variant='outlined'
                                 size='small'
                                 autoFocus
