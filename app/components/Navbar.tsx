@@ -105,7 +105,7 @@ export default function Navbar() {
                 router.push('/searched');
                 setOpen(false);
                 setLoading(false)
-              }, 3000); 
+              }, 4000); 
 
               
                
@@ -133,7 +133,7 @@ export default function Navbar() {
                 className='flex gap-3 bg-gray-100 items-center justify-center border  p-2 rounded-md text-gray-500'>
                 <BiSearch size={20}/>
                 <span className='text-xs font-semibold'>Search...</span>
-                <div className='border bg-white rounded-md p-1 text-xs font-semibold'>Ctrl+K</div>
+                
             </button>
 
             <Modal open={open}
