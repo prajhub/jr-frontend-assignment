@@ -58,9 +58,9 @@ export default function TopAlbums() {
                     <TopAlbumImage album={album} fill />
                    
                     </div>
-                    <div className="font-semibold flex items-center justify-between mt-4 mb-1">
-                    <p className="w-44 truncate">{album.artists[0]?.name}</p>
-                   
+                    <div className="font-semibold flex items-center flex-col md:gap-1 justify-between mt-4 mb-1">
+                    <p className="w-44 truncate">{album.name}</p>
+                    <p className="text-gray-600 hidden md:block">By: {album.artists[0]?.name}</p>
             
                     </div>
                     </Link>

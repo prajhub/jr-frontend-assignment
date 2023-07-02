@@ -8,7 +8,7 @@ import {InputAdornment, Modal, TextField, } from '@mui/material';
 import Box from '@mui/material/Box/Box';
 import {HiBackspace} from 'react-icons/hi'
 import {BiSearch} from 'react-icons/bi'
-
+import SearchSpinner from "./ui/SearchSpinner";
 
 import {useQuery} from '@tanstack/react-query'
 import { Auth } from "@/types/auth";
@@ -45,6 +45,7 @@ export default function Navbar() {
 
 
     const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
 
 
     const handleClose = () => {
@@ -82,8 +83,7 @@ export default function Navbar() {
 
 
     const formSubmit = async (searchdata: any) => {
-        console.log(searchdata.name)
-
+       setLoading(true)
         const artistParams = {
        
                    headers: {
@@ -104,7 +104,8 @@ export default function Navbar() {
                 spotifyStore.setAlbums(album);
                 router.push('/searched');
                 setOpen(false);
-              }, 1000); 
+                setLoading(false)
+              }, 3000); 
 
               
                
@@ -141,7 +142,7 @@ export default function Navbar() {
                         <form onSubmit={handleSubmit(formSubmit)}>
                     <div className='modal-content'>
                     <div className='flex flex-col gap-1 items-center  '>
-                    <TextField sx={
+                    {loading ? <SearchSpinner/> : <TextField sx={
                                     {width: 1000}
                                 }
                                
@@ -166,7 +167,7 @@ export default function Navbar() {
                                             </InputAdornment>
                                         )
                                     }
-                                }/>
+                                }/>}
                                { errors.name && (
                                         <span className="text-red-500 mt-2">
                                             {
