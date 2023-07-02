@@ -12,22 +12,25 @@ export interface TopAlbum {
         name: string;
       };
     };
+    id: string
   }
 
+
+
 export interface Album {
-    name: string,
-    release_date: string,
-    images: {
-        image: {
-            height: number,
-            width: number,
-            url: string,
-        }
-    },
-    artists: {
-        artist: {
-            name: string
-        }
-    }
-    
+  name: string,
+  images: {
+    [index: number]: {
+      height: number;
+      url: string;
+      width: number;
+    };
+  };
+
+  artists: {
+    [index: number]: {
+      name: string;
+    };
+  };
+  release_date: string;
 }

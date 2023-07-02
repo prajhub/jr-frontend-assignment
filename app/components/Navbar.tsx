@@ -33,6 +33,7 @@ export default function Navbar() {
     const spotifyStore = useSpotifyStore()
 
     const [open, setOpen] = useState(false);
+    const [searchInput, setSearchInput] = useState("")
 
     const handleClose = () => {
         setOpen(false);
