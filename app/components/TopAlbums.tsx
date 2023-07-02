@@ -13,7 +13,7 @@ export default function TopAlbums() {
 
      const spotifyStore = useSpotifyStore()
 
-     const { access_token, expires_in, token_type } = spotifyStore.auth;
+     const { access_token, } = spotifyStore.auth;
 
      var authParams = {
         

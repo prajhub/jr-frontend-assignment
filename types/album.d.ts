@@ -34,3 +34,5 @@ export interface Album {
   };
   release_date: string;
 }
+
+export type AlbumArray = Album[];
