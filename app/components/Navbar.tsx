@@ -3,11 +3,18 @@
 
 
 import Link from "next/link";
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import {InputAdornment, Modal, TextField, } from '@mui/material';
 import Box from '@mui/material/Box/Box';
 import {HiBackspace} from 'react-icons/hi'
 import {BiSearch} from 'react-icons/bi'
+
+import {useQuery} from '@tanstack/react-query'
+import { Auth } from "@/types/auth";
+import { useSpotifyStore } from "@/store/useStore";
+
+const CLIENT_ID = "048f3d69a8e449629fc644d26417e921"
+const CLIENT_SECRET = "78e88f5c354748a794b2935df2aca7f4"
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -23,11 +30,40 @@ const style = {
 
 export default function Navbar() {
 
+    const spotifyStore = useSpotifyStore()
+
     const [open, setOpen] = useState(false);
 
     const handleClose = () => {
         setOpen(false);
     };
+
+
+
+//Requesting access token from Spotify API
+
+    var authParams = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'grant_type=client_credentials&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET
+    }
+
+
+    
+
+    const {data} = useQuery<Auth[]>({
+        queryKey: ['authkey'],
+        queryFn: () => fetch('https://accounts.spotify.com/api/token', authParams).then((res) => res.json()).then((data) => {
+            
+            spotifyStore.setAuth(data);
+            return data; 
+          }),
+          enabled: true
+    })
+
+
 
     return (
 
@@ -60,7 +96,7 @@ export default function Navbar() {
                                     {width: 1000}
                                 }
                                
-                                placeholder='Search'
+                                placeholder='Search for your favorite artist or album...'
                                 variant='outlined'
                                 size='small'
                                 autoFocus
