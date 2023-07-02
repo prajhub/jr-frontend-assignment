@@ -22,7 +22,7 @@ export default async  function AlbumPage({ params: { albumId}}: Params) {
 
 
    return (
-    <div>hi</div>
+    <div>{albumId}</div>
    )
     
 }

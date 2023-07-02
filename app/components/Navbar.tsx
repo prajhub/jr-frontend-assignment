@@ -9,9 +9,13 @@ import Box from '@mui/material/Box/Box';
 import {HiBackspace} from 'react-icons/hi'
 import {BiSearch} from 'react-icons/bi'
 
+
 import {useQuery} from '@tanstack/react-query'
 import { Auth } from "@/types/auth";
 import { useSpotifyStore } from "@/store/useStore";
+import {useForm} from 'react-hook-form'
+import { useRouter } from "next/navigation";
+
 
 const CLIENT_ID = "048f3d69a8e449629fc644d26417e921"
 const CLIENT_SECRET = "78e88f5c354748a794b2935df2aca7f4"
@@ -21,19 +25,27 @@ const style = {
     top: '10%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 1000,
+    width: 1100,
     bgcolor: 'background.paper',
-    border: '2px solid #000',
+    border: '1px solid #000',
     boxShadow: 24,
     p: 4
 };
 
 export default function Navbar() {
 
+    const router = useRouter()
+
+    const form = useForm()
+    const {register, handleSubmit, formState} = form
+    const {errors} = formState
+
     const spotifyStore = useSpotifyStore()
+    const { access_token } = spotifyStore.auth;
+
 
     const [open, setOpen] = useState(false);
-    const [searchInput, setSearchInput] = useState("")
+
 
     const handleClose = () => {
         setOpen(false);
@@ -54,7 +66,7 @@ export default function Navbar() {
 
     
 
-    const {data} = useQuery<Auth[]>({
+    const {data: authData} = useQuery<Auth[]>({
         queryKey: ['authkey'],
         queryFn: () => fetch('https://accounts.spotify.com/api/token', authParams).then((res) => res.json()).then((data) => {
             
@@ -63,6 +75,41 @@ export default function Navbar() {
           }),
           enabled: true
     })
+
+
+
+
+
+
+    const formSubmit = async (searchdata: any) => {
+        console.log(searchdata.name)
+
+        const artistParams = {
+       
+                   headers: {
+                       'Content-Type': 'application/json',
+                       Authorization: `Bearer ${access_token}`
+                   },
+                   
+               }
+
+               var artist = await fetch('https://api.spotify.com/v1/search?q=' + searchdata.name + '&type=artist', artistParams).then((res) => res.json()).then(data => { return data.artists.items[0].id})
+
+
+               var album = await fetch('https://api.spotify.com/v1/artists/' + artist + '/albums' + '?include_groups=album&market=US&limit=50', artistParams).then(res => res.json()).then(data => {
+               return data.items
+               })
+
+               setTimeout(() => {
+                spotifyStore.setAlbums(album);
+                router.push('/searched');
+                setOpen(false);
+              }, 1000); 
+
+              
+               
+               
+    }
 
 
 
@@ -91,8 +138,9 @@ export default function Navbar() {
             <Modal open={open}
                 onClose={handleClose}>
                     <Box sx={style}>
+                        <form onSubmit={handleSubmit(formSubmit)}>
                     <div className='modal-content'>
-                    <div className='flex gap-1 items-center  '>
+                    <div className='flex flex-col gap-1 items-center  '>
                     <TextField sx={
                                     {width: 1000}
                                 }
@@ -101,6 +149,9 @@ export default function Navbar() {
                                 variant='outlined'
                                 size='small'
                                 autoFocus
+                                {...register("name", {
+                                    required: 'Insert valid artist or album name.'
+                                })}
                                 fullWidth
                                 InputProps={
                                     {
@@ -116,8 +167,15 @@ export default function Navbar() {
                                         )
                                     }
                                 }/>
+                               { errors.name && (
+                                        <span className="text-red-500 mt-2">
+                                            {
+                                            errors.name.message ?. toString()
+                                        } </span>
+                                    )}
                     </div>
                     </div>
+                    </form>
                     </Box>
                 </Modal>
                 </div>
